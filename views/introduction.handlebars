@@ -1,0 +1,30 @@
+<div class="article">
+ <h2>Introduction</h2>
+ <p> Welcome to my Steam Web API guide. In this guide, I'll be going over how to get started with the Steam Web API. You can find official documentation for the API at the following links:</p>
+ <ul>
+ <li> <a href="https://developer.valvesoftware.com/wiki/Steam_Web_API"> https://developer.valvesoftware.com/wiki/Steam_Web_API </a>
+ <li> <a href="https://partner.steamgames.com/documentation/webapi"> https://partner.steamgames.com/documentation/webapi </a>
+ <li> <a href="http://steamcommunity.com/dev"> http://steamcommunity.com/dev</a>
+ </ul>
+ <p> However, the information provided in the wiki (the first link) is all over the place while the information provided in the other two links is rather sparse. It is my goal to provide a better starting foundation for this API. So let's get started. </p>
+  <hr>
+ <h2>What you need to get started.</h2>
+ <p> To begin, you may request an API key from the following link: <a href="http://steamcommunity.com/dev/apikey">http://steamcommunity.com/dev/apikey</a>. You must have a Steam Account already created or you may create a new Steam Account here: <a href="https://store.steampowered.com/join/">https://store.steampowered.com/join/</a>. In addition to having a Steam Account, you must already have a domain name available and you must accept the Steam Web API terms of use which can be found here: <a href="http://steamcommunity.com/dev/apiterms">http://steamcommunity.com/dev/apiterms</a>.</p>
+ <p> Once you have provided all the information you need, you will be given a key which you should keep in a safe place.
+  <hr>
+ <h2> Format of the API call </h2>
+ <p> Now we can go over the logistics of the API call. The API call has the following form: </p>
+ <p class="format"> http://api.steampowered.com/&ltinterface <em>name</em>&gt/&ltmethod <em>name</em>&gt/v&ltversion&gt/?key=&ltapi key&gt&ampformat=&ltformat&gt </p>
+ <p>As you can see, the call starts with the domain name api.steampowered.com. From there, you must enter the path name to the interface you are interested in. What is an interface though? To put it simply, an interface is a collection of method calls Valve likes to keep together for various reasons. After the path to the interface name is the path to the method name. A method is the actual http request you want to call, e.g. if you want information on the current number of players playing a particular game, then you would want to call the GetNumberOfCurrentPlayers method from the ISteamUserStats interface. From there, you need to specify which version of the method you want to call. The version is the numbered version of the method and some methods may have more than one. Lastly, after you have specified those paths, you can append the url with query parameters. In this example, key is your API key, and format is the format of the data you want to receive from the server. The key and format are actually optional query values you can submit with the API call. Some interfaces do not require an API Key while some do (more on this later). If you do not specify a data format to return, then it will return JSON as default. </p>
+ <p> Each method can return data in three different formats: JSON, XML, and VDF. For JSON, the API will return an object containing the resulting data. It is important to note that when the API returns an array of objects, the name of the array will be the object's name. For example, given a call to GetSupportedAPIList, the API will a return a JSON object called apilist with an array of interface objects called interfaces. In addition, Null is used the same as JSON's null. For XML data, attribute tags are not used, arrays are a series of sub-elements in the containing element, and Null is used as the word "null" between element tags. Lastly, VDF, which stands for Valve Data Format, is an internal data format used by Valve. I am not going to get into the specifics of this format. If you wish to learn more, you may find documentation here: <a href="https://developer.valvesoftware.com/wiki/KeyValues">https://developer.valvesoftware.com/wiki/KeyValues</a>.</p>
+ <p> In this guide, I will stick to using JSON as it is easy to work with and Javascript provides built in tools to parse it. Feel free to experiment with format=xml or format=vdf if that interests you. The other last thing to note is that Valve permits 100,000 api calls per day for your key. If you desire more calls for whatever you are developing, you may request higher call limits from Valve if you adhere to their terms of use.</p>
+ <hr>
+ <p>We have covered the basics so far. Next, we are going to delve more into the Steam Web API's interfaces.</p>
+ 
+ 
+<div class="next_bar_1">
+<p class="current_1">Current: Introduction </p>
+<p class="next_page_1">Next Page: <a href="http://flip3.engr.oregonstate.edu:12725/interfaces">Interfaces</a> &#8594 </p>
+</div>
+<p>Author: Matthew Toro, 2017</p>
+</div>

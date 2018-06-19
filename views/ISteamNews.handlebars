@@ -1,0 +1,57 @@
+ <div class="article">
+ <h2>ISteamNews</h2>
+ <p>Here we are going to cover some runnable code examples on how to use the ISteamNews interface. My examples are going to be Javascript examples that use the request library of node.js. My examples will be front-end development examples that just take information from the call and insert it into the page but you could use these asynchronous requests just as easily to retrieve some data to store in your own database. I am using Handlebars to process the html and render different pages. It's important to note that there is some code in my Handlebars files that helps run the examples but I do not show them as I want to focus on the Javascript and the API call.</p>
+ <p> This interface, as seen in the previous page, does not have too much going on. It has two methods, GetNewsForApp, which do the exact same thing except one method, version 2, has an additional, optional parameter. As we saw from the prior page, the only required parameter for this method call is an appid. <a href="https://steamdb.info/apps/">https://steamdb.info/apps/</a> is a great reference to look up and find app id's for games you are interested in. In this example, the game I have chosen is Dota 2 and the app id is 570.</p>
+ <p> The following example uses the request library of node.js in order to make an asynchoronous http request while avoiding CORS. As seen in the API format call, I start with the path to the interface, followed by the path to the method I want to call, followed by the version of the method I want to call, and end the url with any query values that are required or optional. I chose to use the optional parameter count which takes an integer data type and restricts the number of news stories to the integer passed. The response of the server is parsed in the body and I extract the information I want using the standard Javascript notation to access data members of objects. The data I extracted for this example is the title of the article, the author of the article, and its url. As you can see, the data I wanted is rooted a little bit of a ways down the JSON structure. This is an easy area to mess up. I recommend logging the data you want to retrieve in the console before using it to make sure you are retrieving the data that you actually want to access. It is very easy to just type in the path that you think will get you what you want, but you end up getting null or undefined references. To see the result of this code being run, press the run code button after the code block. </p>
+ <pre><code> request('http://api.steampowered.com/ISteamNews/GetNewsForApp/v1/?appid=570&count=1', function(err, response, body){
+ if(!err && response.statusCode < 400){
+	var result = (JSON.parse(body));
+	context.version1_title = result.appnews.newsitems.newsitem[0].title;
+	context.version1_author = result.appnews.newsitems.newsitem[0].author;
+	context.version1_url = result.appnews.newsitems.newsitem[0].url;
+	res.render('ISteamNews', context);
+	return;
+ }
+</code></pre>
+<form method="post">
+<input type="submit" name="Run_Ex_1" value="Run Code">
+</form>
+<hr>
+<ul>
+		<li><span>Title: </span><span> {{version1_title}} </span></li>
+        <li><span>Author: </span><span> {{version1_author}} </span></li>
+		<li><span>url: </span><span> {{version1_url}} </span></li>
+</ul>
+<hr>
+<p> Now I am going to show a very similar example, except this time I am going to use version 2 of the method call and specify the news I want stories from. I am going to choose <a href="http://www.pcgamer.com/">PC Gamer</a> for this example. Most of the API call remains the same except for two places. I make sure to specify that this is version 2 of the GetNewsForApp call. I do so by specifying /v2 after the name of the method call. I also add the optional feeds parameter to the API call after the count by passing pcgamer as the value (feeds=pcgamer). This will restrict the news stories to only results from pcgamer.com. The structure of this returned JSON object is also slightly different from the prior example (this is not shown, but if you run the API call, you will notice it). In this returned object, there is only one array of news item objects labeled newsitems. As such, I don't need to go down as many child nodes to get the data I am interested in. The data I extract from this object is again, the title of the article, the feed label to ensure that I am indeed getting information from PC Gamer, and the url. Go ahead and press the run code example to see the results when ready.</p>
+ <pre><code> request('http://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=570&count=1&feeds=pcgamer', function(err, response, body){
+ if(!err && response.statusCode < 400){
+	var result = (JSON.parse(body));
+	context.version2_title = result.appnews.newsitems[0].title;
+	context.version2_feedLabel = result.appnews.newsitems[0].feedlabel;
+	context.version2_url = result.appnews.newsitems[0].url;
+	res.render('ISteamNews', context);
+	return;
+ }
+</code></pre>
+<form method="post">
+<input type="submit" name="Run_Ex_2" value="Run Code">
+</form>
+<hr>
+<ul>
+		<li><span>Title: </span><span> {{version2_title}} </span></li>
+        <li><span>Feed Label: </span><span> {{version2_feedLabel}} </span></li>
+		<li><span>url: </span><span> {{version2_url}} </span></li>
+</ul>
+<hr>
+<p> Fortunately, this interface and its method calls do not require an API key so anyone can make these calls. As such, this is a great place to start if you just want to test the waters. Go ahead and practice requesting different types of data from this call. Next, when you are ready, I am going to cover some Javascript code examples for ISteamUser which <em>does</em> require an API key for its method calls.</p>
+<div class="next_bar_1">
+<p class="previous">&#8592 Previous Page: <a href="http://flip3.engr.oregonstate.edu:12725/interfaces">Interfaces</a>
+<p class="current_2">Current: ISteamNews </p>
+ <p class="next_page_2">Next Page: <a href="http://flip3.engr.oregonstate.edu:12725/ISteamUser">ISteamUser</a> &#8594 </p>
+</div>
+<br>
+<p>Author: Matthew Toro, 2017</p>
+</div>
+
+</div>

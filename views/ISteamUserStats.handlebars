@@ -1,0 +1,48 @@
+ <div class="article">
+ <h2>ISteamUserStats</h2>
+ <p> Congratulations on making it this far! Luckily, there is nothing really new to cover here. I am just going to combine what we learned from the last two examples of calling the API with an API key, passing in an app id, and passing in a Steam ID to retrieve user stats about a particular game. The method I am going to call is GetPlayerAchievements from the interface ISteamUserStats. The call requires an API key, a Steam ID, and an app id. The game I've chosen as an example is Papo & Yo as it only has 10 achievements. I am going to render a table with the achievement names and whether I have earned them or not using Handlebars.</p>
+ <p> The code block is the same as prior examples. It demonstrates an asynchronous call using the request library of node.js. The API call starts with the path to the ISteamUserStats interface, then the path to the GetPlayerAchievements method, followed by the version, and then I append my API key, my Steam ID, and the app ID as query parameters to the call. The object returned in this case is a root object called playerstats. It has data members for the Steam ID of the user, the name of the game, and an array of achievement objects called achievements. I add the game name to the context along with the array achievements and pass it to Handlebars to render the table. Each achievement is an object containing data on whether the achievement has been achieved, the name of the achievement, and the time it was achieved at. In this example, I just use the name and whether it was achieved. Click the Run Code button to see the results.</p>
+ <pre><code> request('http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=' + credentials.steamKey + '&steamid=' + credentials.steamID + '&appid=227080', function(err, response, body){
+ if(!err && response.statusCode < 400){
+	var result = (JSON.parse(body));
+	context.gameName = result.playerstats.gameName;
+	context.achievements = result.playerstats.achievements;
+	res.render('ISteamUserStats', context);
+	return;
+ }
+</code></pre>
+<form method="post">
+<input type="submit" name="Run_Ex_1" value="Run Code">
+</form>
+<hr>
+<table class="achieve_example">
+	<caption>{{gameName}}</caption>
+	<thead>
+		<tr>
+			<th>Achievements</th>
+			<th>Achieved?</th>
+		</tr>
+	</thead>
+	<tbody>
+	{{#each achievements}}
+	<tr>
+		<th>{{this.apiname}}</th>
+		{{#if this.achieved}}
+			<td> Yes </td>
+		{{else}}
+			<td> No </td>
+		{{/if}}
+	</tr>
+	{{/each}}
+	</tbody>
+</table>
+<hr>
+<p> This is the end of the how-to-guide. I hope you have learned something along the way about using the Steam Web API. There are many great web applications to be made with this API. The API list contains 58 interfaces so far at the time of this writing so there are so many ideas worth exploring in this API. Make sure you bookmark any useful links posted in the guide as a reference for development. I wish you the best of luck with your future endeavors and happy developing.</p>
+<div class="next_bar_1">
+<p class="previous">&#8592 Previous Page: <a href="http://flip3.engr.oregonstate.edu:12725/ISteamUser">ISteamUser</a> </p>
+<p class="current_2">Current: ISteamUserStats </p>
+<p class="next_page_2">Next Page: <a href="http://flip3.engr.oregonstate.edu:12725/">Introduction</a> &#8594 </p>
+</div>
+<br>
+<p>Author: Matthew Toro, 2017</p>
+</div>

@@ -1,0 +1,100 @@
+ <div class="article">
+ <h2>Interfaces</h2>
+ <p> Interfaces are the main organization unit of the Steam Web API. They are essentially groupings of different method calls. Some interfaces are quite logical in what methods fall under them while others not so much.</p>
+ <p> Valve maintains the documentation for all interfaces in an actual call to their API. This call is <a href="http://api.steampowered.com/ISteamWebAPIUtil/GetSupportedAPIList/v0001/">http://api.steampowered.com/ISteamWebAPIUtil/GetSupportedAPIList/v0001/</a>.<p>
+ <p> The above link contains 19 interfaces (at the time of this writing) than can be called without an API key. You can call the API with your key appended as a query value to receive the full list of interfaces. This call would look like this: <em>http://api.steampowered.com/ISteamWebAPIUtil/GetSupportedAPIList/v0001/?key="your_key_here"</em>. This results in 58 interfaces at the time of this writing.</p>
+ <p> Since I did not specify a format, the server returned the data as JSON. Let's go over the returned object. The root node is called apilist and it holds an array of interface objects named interfaces. Each interface is indexed like a normal array (starting at 0). Each object interface has two data members. Name contains the actual name of the interface you would use in a call and methods is an array of method objects. Each method object has data members for the name of the method, the version, the httpmethod, and an array of parameter objects called parameters. Each parameter object has data members for the name of the parameter, the data type, whether it is optional, and a string description.</p>
+ <p> The following is an example of an interface located in the interfaces array. Let's go over it.</p>
+ <pre><code> {
+	"name": "ISteamNews",
+	"methods": [
+	{
+		"name": "GetNewsForApp",
+		"version": 1,
+		"httpmethod": "GET",
+		"parameters": [
+		{
+			"name": "appid",
+			"type": "uint32",
+			"optional": false,
+			"description": "AppID to retrieve news for"
+		},
+		{
+			"name": "maxlength",
+			"type": "uint32",
+			"optional": true,
+			"description": "Maximum length for the content to return, if this is 0 the full content is returned, if it's less then a blurb is generated to fit."
+		},
+		{
+			"name": "enddate",
+			"type": "uint32",
+			"optional": true,
+			"description": "Retrieve posts earlier than this date (unix epoch timestamp)"
+		},
+		{
+			"name": "count",
+			"type": "uint32",
+			"optional": true,
+			"description": "# of posts to retrieve (default 20)"
+		}
+		]
+						
+	},
+	{
+		"name": "GetNewsForApp",
+		"version": 2,
+		"httpmethod": "GET",
+		"parameters": [
+		{
+			"name": "appid",
+			"type": "uint32",
+			"optional": false,
+			"description": "AppID to retrieve news for"
+		},
+		{
+			"name": "maxlength",
+			"type": "uint32",
+			"optional": true,
+			"description": "Maximum length for the content to return, if this is 0 the full content is returned, if it's less then a blurb is generated to fit."
+		},
+		{
+			"name": "enddate",
+			"type": "uint32",
+			"optional": true,
+			"description": "Retrieve posts earlier than this date (unix epoch timestamp)"
+		},
+		{
+			"name": "count",
+			"type": "uint32",
+			"optional": true,
+			"description": "# of posts to retrieve (default 20)"
+		},
+		{
+			"name": "feeds",
+			"type": "string",
+			"optional": true,
+			"description": "Comma-seperated list of feed names to return news for"
+		}
+		]
+						
+	}
+	]
+				
+ },
+</code></pre>
+
+<p> The interface object in this example is ISteamNews. It has a data member name which holds the interface's name, in this case ISteamNews. Next is an array of method objects. This particular interface only has two methods associated with it. They are both the method for GetNewsForApp. As one can see, the method object holds data members for its name, its version number, its httpmethod, and an array of parameter objects. Each method is a GET http request. The difference between versions 1 and 2 is that version 2 also has a parameter for feeds which is a comma separated list of feed names.
+
+<p> Now if this was the only way to look up interfaces and methods for the Steam Web API, that would get rather taxing. Fortunately, someone thought of a solution. <a href="http://steamwebapi.azurewebsites.net/">http://steamwebapi.azurewebsites.net/</a> is an unaffiliated website that lists all interfaces along with their method calls in a much more readable format. It even includes parameters for each method. This is a handy reference for finding different interfaces and methods.</p>
+<p> That is about all there is to know about interfaces from a big picture perspective. As I said before, your main take away should be that method calls are grouped under these interfaces. If you are interested in a specific method call, then you need to identify which interface it falls under in order to call it successfully.
+<hr>
+<p> Next, I am going to cover some Javascript code examples for this particular interface.</p>
+<div class="next_bar_1">
+<p class="previous">&#8592 Previous Page: <a href="http://flip3.engr.oregonstate.edu:12725/interfaces">Introduction</a>
+<p class="current_2">Current: Interfaces </p>
+ <p class="next_page_2">Next Page: <a href="http://flip3.engr.oregonstate.edu:12725/ISteamNews">Example: ISteamNews</a> &#8594 </p>
+</div>
+<p>Author: Matthew Toro, 2017</p>
+</div>
+
+</div>

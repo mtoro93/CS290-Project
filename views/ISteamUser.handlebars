@@ -1,0 +1,61 @@
+ <div class="article">
+ <h2>ISteamUser</h2>
+ <p>I am going to cover two different method calls from the ISteamUser interface. Unlike the ISteamNews interface, the ISteamUser interface does require an API key as a query parameter when you issue requests. If you try to call this method without an API key, then it will return a JSON object with a failure data member instead of a success data member. The other required parameter for these calls is the Steam ID of the user you want to request information about. There are a few different websites that you can search for these ID's on. Here is a list:</p>
+ <ul>
+ <li> <a href="http://steamrep.com/">http://steamrep.com/</a>
+ <li> <a href="https://steamid.io/">https://steamid.io/</a>
+ <li> <a href="http://steamidfinder.com/">http://steamidfinder.com/</a>
+ <li> <a href="https://profile.tf/>https://profile.tf/</a>
+ <li> <a href="http://steamid.co/>http://steamid.co/</a>
+ </ul>
+ <p> You can also obtain Steam ID's from the url of a user's profile. For example, here is my Steam profile <a href="http://steamcommunity.com/profiles/76561198018139275">http://steamcommunity.com/profiles/76561198018139275</a>. The ending digits make up the Steam ID. You can find more documentation on Steam ID's here: <a href="https://developer.valvesoftware.com/wiki/SteamID">https://developer.valvesoftware.com/wiki/SteamID</a>. Once again, if you do not provide a Steam ID as a query parameter or the Steam ID does not exist, then the request will return a JSON object with a failure data member instead of a success data member. Go ahead and try to call it without one of the required parameters and you will see. </p> 
+ <p> Now, the first method I am going to call is GetPlayerSummaries. This method allows you to query for multiple player summaries but I am just going to query for my own. The summary information includes the user's Steam ID, their persona name, their profile url, among other information that may or may not show depending on the user's privacy settings. If a user has their privacy settings set to friends only or private, you won't be able to get any information from the API call for them. The response will shoot back an error telling you their profile is private.</p>
+ <p> The following code block demonstrates an asynchronous call using the request library of node.js. The API call starts with the path to the ISteamUser interface, then the path to the GetPlayerSummaries method, followed by the version (version 1 in this case; there is a second version, but all it does is limit how many Steam ID's you can query), and then I append my API key and my Steam ID as query parameters to the call. The object returned in this case is a root object called players, followed by an array called player that contains player objects. From there, I use the dot operator to access object data members. I extract information on the persona name, their real name (my name in this case), and the url to their profile. Click the Run Code button to see the results. </p>
+ <pre><code> request('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v1/?key=' + credentials.steamKey + '&steamids=' + credentials.steamID, function(err, response, body){
+ if(!err && response.statusCode < 400){
+	var result = (JSON.parse(body));
+	context.personaName = result.players.player[0].personaname;
+	context.realName = result.players.player[0].realname;
+	context.profileURL = result.players.player[0].profileurl;
+	res.render('ISteamUser', context);
+	return;
+ }
+</code></pre>
+<form method="post">
+<input type="submit" name="Run_Ex_1" value="Run Code">
+</form>
+<hr>
+<ul>
+		<li><span>Persona Name: </span><span> {{personaName}} </span></li>
+        <li><span>Real Name: </span><span> {{realName}} </span></li>
+		<li><span>Profile URL: </span><span> {{profileURL}} </span></li>
+</ul>
+<hr>
+<p>Next up is a call to GetUserGroupList. This call returns the group ID's for the groups a particular user belongs to. It takes the same parameters as the prior example, an API key and a Steam ID. The call format is similar except the method this time is GetUserGroupList and the Steam ID parameter is called steamid instead of steamids as this method only takes one Steam ID to return data for (this is an easy place to goof up so make sure the parameter is steamid without the 's'). I created 3 separate, new groups for this example. I am going to request the group ID's from the server and paste the links below the code example. I made the group's profile page route to the group ID in order for this to work. The data I extract from the returned object is the array for groups. I handle making the links for each group in Handlebars so you won't see it below. Remember, all this call returns is integer group ID's named 'gid'. I made the links with code. Hit the Run Code below the example to get the links.</p>
+<pre><code> request('http://api.steampowered.com/ISteamUser/GetUserGroupList/v1/?key=' + credentials.steamKey + '&steamid=' + credentials.steamID, function(err, response, body){
+ if(!err && response.statusCode < 400){
+	var result = (JSON.parse(body));
+	context.group = result.response.groups;
+	res.render('ISteamUser', context);
+	return;
+ }
+</code></pre>
+<form method="post">
+<input type="submit" name="Run_Ex_2" value="Run Code">
+</form>
+<hr>
+<ul>
+  {{#each group}}
+		<li><span> <a href="http://steamcommunity.com/groups/{{this.gid}}">http://steamcommunity.com/groups/{{this.gid}}</a> </span></li>
+{{/each}}
+</ul>
+<hr>
+<p> By now, I hope you have received a good grasp on how to use your Steam Web API key to retrieve really specific information from the server. Our last example will cover the interface ISteamUserStats. Head to the next page when you are ready.</p>
+<div class="next_bar_1">
+<p class="previous">&#8592 Previous Page: <a href="http://flip3.engr.oregonstate.edu:12725/ISteamNews">ISteamNews</a> </p>
+<p class="current_2">Current: ISteamUser </p>
+<p class="next_page_2">Next Page: <a href="http://flip3.engr.oregonstate.edu:12725/ISteamUserStats">ISteamUserStats</a> &#8594 </p>
+</div>
+<br>
+<p> Author: Matthew Toro, 2017</p>
+</div>
